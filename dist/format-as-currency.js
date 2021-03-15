@@ -1,10 +1,10 @@
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.formatAsCurrency = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.formatAsCurrency = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 // for usage via require()
 module.exports = 'bcherny/formatAsCurrency'
 
 angular
 .module('bcherny/formatAsCurrency', [])
-.service('formatAsCurrencyUtilities', function () {
+.service('formatAsCurrencyUtilities', ['$locale', function ($locale) {
 
   // (haystack: String, needles: Array<String>) => Number
   // eg. ('foo', 'o') => 2
@@ -49,8 +49,10 @@ angular
     if (!angular.isString(currencyString)) {
       throw new TypeError ('formatAsCurrencyUtilities#toFloat expects its 1st argument to be a String, but was given ' + currencyString)
     }
-
-    return parseFloat(currencyString.replace(/(\$|\,)+/g, ''), 10)
+    currencyString = currencyString.split($locale.NUMBER_FORMATS.DECIMAL_SEP).join(".")
+	    .split($locale.NUMBER_FORMATS.GROUP_SEP).join("")
+	    .split($locale.NUMBER_FORMATS.CURRENCY_SYM).join('')
+    return parseFloat(currencyString, 10)
   }
 
   // (array: Array) => Array
@@ -82,7 +84,7 @@ angular
 
   }
 
-})
+}])
 .directive('formatAsCurrency', ['$filter', '$locale', 'formatAsCurrencyUtilities', function ($filter, $locale, formatAsCurrencyUtilities) {
 
   var util = formatAsCurrencyUtilities
@@ -119,7 +121,7 @@ angular
           // did we add a comma or currency symbol?
           var specialCharactersCountChange = [value, formatted]
             .map(function (string) {
-              return util.occurrences(string, specialCharacters)
+              return util.occurrences(string.substr(0, element[0].selectionEnd - 1), specialCharacters)
             })
             .reduce(function (prev, cur) {
               return cur - prev
@@ -162,5 +164,6 @@ angular
   }
 
 }])
+
 },{}]},{},[1])(1)
 });

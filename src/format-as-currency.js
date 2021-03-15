@@ -3,7 +3,7 @@ module.exports = 'bcherny/formatAsCurrency'
 
 angular
 .module('bcherny/formatAsCurrency', [])
-.service('formatAsCurrencyUtilities', function () {
+.service('formatAsCurrencyUtilities', ['$locale', function ($locale) {
 
   // (haystack: String, needles: Array<String>) => Number
   // eg. ('foo', 'o') => 2
@@ -48,8 +48,10 @@ angular
     if (!angular.isString(currencyString)) {
       throw new TypeError ('formatAsCurrencyUtilities#toFloat expects its 1st argument to be a String, but was given ' + currencyString)
     }
-
-    return parseFloat(currencyString.replace(/(\$|\,)+/g, ''), 10)
+    currencyString = currencyString.split($locale.NUMBER_FORMATS.DECIMAL_SEP).join(".")
+	    .split($locale.NUMBER_FORMATS.GROUP_SEP).join("")
+	    .split($locale.NUMBER_FORMATS.CURRENCY_SYM).join('')
+    return parseFloat(currencyString, 10)
   }
 
   // (array: Array) => Array
@@ -81,7 +83,7 @@ angular
 
   }
 
-})
+}])
 .directive('formatAsCurrency', ['$filter', '$locale', 'formatAsCurrencyUtilities', function ($filter, $locale, formatAsCurrencyUtilities) {
 
   var util = formatAsCurrencyUtilities
@@ -118,7 +120,7 @@ angular
           // did we add a comma or currency symbol?
           var specialCharactersCountChange = [value, formatted]
             .map(function (string) {
-              return util.occurrences(string, specialCharacters)
+              return util.occurrences(string.substr(0, element[0].selectionEnd - 1), specialCharacters)
             })
             .reduce(function (prev, cur) {
               return cur - prev
