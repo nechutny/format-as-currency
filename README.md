@@ -85,6 +85,27 @@ Install via bower or NPM:
 </script>
 ```
 
+### Pass arguments to filter function
+
+```html
+<input
+  format-as-currency
+  currency-filter="'currency'"
+  filter-arguments="'CZK'"
+  ng-model="value"
+  type="text"
+>
+```
+
+```html
+<input
+  format-as-currency
+  filter-arguments="['CZK', 2]"
+  ng-model="value"
+  type="text"
+>
+```
+
 ### With a module loader
 
 #### Browserify

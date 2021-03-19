@@ -95,6 +95,7 @@ angular
     link: function (scope, element, attrs, ngModel) {
 
       var filter = $filter('currency')
+      var filterArguments = []
 
       scope.$watch(function(){
         return scope.$eval(attrs.currencyFilter)
@@ -103,8 +104,19 @@ angular
         triggerRender()
       })
 
+      scope.$watch(function(){
+	    return scope.$eval(attrs.filterArguments)
+      }, function (f) {
+	    if(f) {
+	      filterArguments = Array.isArray(f) ? f : [f]
+	    } else {
+	      filterArguments = []
+	    }
+	    triggerRender()
+      }, true)
+
       ngModel.$formatters.push(function (value) {
-        return filter(value)
+        return filter(value, ...filterArguments)
       })
 
       ngModel.$parsers.push(function (value) {
@@ -115,7 +127,7 @@ angular
 
         if (ngModel.$validators.currency(number)) {
 
-          var formatted = filter(number)
+          var formatted = filter(number, ...filterArguments)
           var specialCharacters = util.uniqueChars(number, formatted)
 
           // did we add a comma or currency symbol?
