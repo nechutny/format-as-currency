@@ -100,7 +100,6 @@ angular
         return scope.$eval(attrs.currencyFilter)
       }, function (f) {
         filter = f ? $filter(f) : $filter('currency')
-        triggerRender()
       })
 
       scope.$watch(function(){
@@ -111,7 +110,6 @@ angular
 	    } else {
 	      filterArguments = []
 	    }
-	    triggerRender()
       }, true)
 
       ngModel.$formatters.push(function (value) {
