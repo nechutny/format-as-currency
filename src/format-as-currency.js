@@ -95,6 +95,7 @@ angular
 
       var filter = $filter('currency')
       var filterArguments = []
+      var decimalPlaces = 2;
 
       scope.$watch(function(){
         return scope.$eval(attrs.currencyFilter)
@@ -112,6 +113,16 @@ angular
 	    }
       }, true)
 
+      scope.$watch(function(){
+	    return scope.$eval(attrs.decimalPlaces)
+      }, function (f) {
+	    if(f) {
+	      decimalPlaces = f
+	    } else {
+	      decimalPlaces = 2
+	    }
+      })
+
       ngModel.$formatters.push(function (value) {
         return filter(value, ...filterArguments)
       })
@@ -120,7 +131,7 @@ angular
         // ignore non-numeric characters
         value = value.replace(/[a-zA-Z!\?>:;\|<@#%\^&\*\)\(\+\/\\={}\[\]_]/g, '')
 
-        var number = (Math.floor(util.toFloat(value) * 100) / 100).toFixed(2)
+        var number = (Math.floor(util.toFloat(value) * 100) / 100).toFixed(decimalPlaces)
 
         if (ngModel.$validators.currency(number)) {
 
