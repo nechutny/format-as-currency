@@ -116,7 +116,7 @@ angular
       scope.$watch(function(){
 	    return scope.$eval(attrs.decimalPlaces)
       }, function (f) {
-	    if(f) {
+	    if(f !== undefined) {
 	      decimalPlaces = f
 	    } else {
 	      decimalPlaces = 2
