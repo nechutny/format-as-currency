@@ -95,8 +95,9 @@ angular
     link: function (scope, element, attrs, ngModel) {
 
       var filter = $filter('currency')
-      var filterArguments = []
-      var decimalPlaces = 2;
+      var filterAgumsntsInit = scope.$eval(attrs.filterArguments);
+      var filterArguments = Array.isArray(filterAgumsntsInit) ? filterAgumsntsInit : [filterAgumsntsInit]
+      var decimalPlaces = scope.$eval(attrs.decimalPlaces);
 
       scope.$watch(function(){
         return scope.$eval(attrs.currencyFilter)
