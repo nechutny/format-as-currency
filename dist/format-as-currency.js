@@ -132,7 +132,7 @@ angular
         // ignore non-numeric characters
         value = value.replace(/[a-zA-Z!\?>:;\|<@#%\^&\*\)\(\+\/\\={}\[\]_]/g, '')
 
-        var number = (Math.floor(util.toFloat(value) * 100) / 100).toFixed(decimalPlaces)
+        var number = (Math.floor(util.toFloat(value) * (10**decimalPlaces)) / (10**decimalPlaces)).toFixed(decimalPlaces)
 
         if (ngModel.$validators.currency(number)) {
 
