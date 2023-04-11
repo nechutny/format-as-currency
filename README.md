@@ -106,6 +106,18 @@ Install via bower or NPM:
 >
 ```
 
+### Specify number of decimals 
+
+```html
+<input
+  format-as-currency
+  filter-arguments="['CZK', 5]"
+  decimal-places="5"
+  ng-model="value"
+  type="text"
+>
+```
+
 ### With a module loader
 
 #### Browserify

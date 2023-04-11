@@ -94,13 +94,14 @@ angular
     link: function (scope, element, attrs, ngModel) {
 
       var filter = $filter('currency')
-      var filterArguments = []
+      var filterAgumsntsInit = scope.$eval(attrs.filterArguments);
+      var filterArguments = Array.isArray(filterAgumsntsInit) ? filterAgumsntsInit : [filterAgumsntsInit]
+      var decimalPlaces = scope.$eval(attrs.decimalPlaces);
 
       scope.$watch(function(){
         return scope.$eval(attrs.currencyFilter)
       }, function (f) {
         filter = f ? $filter(f) : $filter('currency')
-        triggerRender()
       })
 
       scope.$watch(function(){
@@ -111,8 +112,17 @@ angular
 	    } else {
 	      filterArguments = []
 	    }
-	    triggerRender()
       }, true)
+
+      scope.$watch(function(){
+	    return scope.$eval(attrs.decimalPlaces)
+      }, function (f) {
+	    if(f !== undefined) {
+	      decimalPlaces = f
+	    } else {
+	      decimalPlaces = 2
+	    }
+      })
 
       ngModel.$formatters.push(function (value) {
         return filter(value, ...filterArguments)
@@ -124,7 +134,7 @@ angular
           value = value.replace(/[a-zA-Z!\?>:;\|<@#%\^&\*\)\(\+\/\\={}\[\]_]/g, '')
         }
 
-        var number = (Math.floor(util.toFloat(value) * 100) / 100).toFixed(2)
+        var number = (Math.floor(util.toFloat(value) * (10**decimalPlaces)) / (10**decimalPlaces)).toFixed(decimalPlaces)
 
         if (ngModel.$validators.currency(number)) {
 
