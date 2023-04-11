@@ -120,7 +120,9 @@ angular
 
       ngModel.$parsers.push(function (value) {
         // ignore non-numeric characters
-        value = value.replace(/[a-zA-Z!\?>:;\|<@#%\^&\*\)\(\+\/\\={}\[\]_]/g, '')
+        if(typeof value === "string") {
+          value = value.replace(/[a-zA-Z!\?>:;\|<@#%\^&\*\)\(\+\/\\={}\[\]_]/g, '')
+        }
 
         var number = (Math.floor(util.toFloat(value) * 100) / 100).toFixed(2)
 
