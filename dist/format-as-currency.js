@@ -134,6 +134,9 @@ angular
         if(typeof value === "string") {
           value = value.replace(/[a-zA-Z!\?>:;\|<@#%\^&\*\)\(\+\/\\={}\[\]_]/g, '')
         }
+        if(isNaN(value)) {
+          value = 0;
+        }
 
         var number = (Math.floor(util.toFloat(value) * (10**decimalPlaces)) / (10**decimalPlaces)).toFixed(decimalPlaces)
 
